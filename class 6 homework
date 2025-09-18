@@ -1,0 +1,42 @@
+import csv
+
+def get_record():
+    group_name = input("Enter group name: ")
+    group_size = int(input("Enter size of group: "))
+    competition_date = input("Enter date of competition (DD-MM-YYYY): ")
+    venue = input("Enter venue: ")
+    medal_type = input("Enter type of medal (Gold/Silver/Bronze/None): ")
+    record = (group_name, group_size, competition_date, venue, medal_type)
+    return record
+
+def save_to_csv(records, filename="competition_records.csv"):
+    with open(filename, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Group Name", "Size", "Date", "Venue", "Medal"])
+        for rec in records:
+            writer.writerow(rec)
+
+def main():
+    records = []
+    while True:
+        print("\nEnter new competition record:")
+        record = get_record()
+        records.append(record)
+        choice = input("Do you want to add another record? (yes/no): ").strip().lower()
+        if choice != "yes":
+            break
+
+    print("\nCompetition Records:")
+    print(f"{'No.':<5}{'Group Name':<20}{'Size':<8}{'Date':<15}{'Venue':<20}{'Medal':<10}")
+    print("-" * 80)
+    for idx, rec in enumerate(records, start=1):
+        print(f"{idx:<5}{rec[0]:<20}{rec[1]:<8}{rec[2]:<15}{rec[3]:<20}{rec[4]:<10}")
+
+    save_to_csv(records)
+    print("\n✅ Records saved to 'competition_records.csv'")
+
+if __name__ == "__main__":
+    main()
+
+
+    
