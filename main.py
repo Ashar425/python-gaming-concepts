@@ -1,54 +1,105 @@
-import pgzrun 
-from random import randint
+import pgzrun
+import random
 
-WIDTH=600
-HEIGHT=500
+WIDTH=800
+HEIGHT=600
 
-score=0
+CENTRE=(400,300)
+FINAL_LEVEL=6
+START_SPEED=10
+ITEMS=["battery","bottle","bag","paper","plastic",]
+
 game_over=False
+game_complete=False
+current_level=1
 
-cheese=Actor("cheese")
-cheese.pos=200,200
-
-mouse=Actor("mouse")
-mouse.pos=100,100
+items=[]
+animations=[]
 
 def draw():
-    screen.blit("sky",(0,0))
-    cheese.draw()
-    mouse.draw()
-    screen.draw.text("scores: "+str(score),color="black",topleft=(10,10))
-
+    global items, current_level,game_over,game_complete
+    screen.clear()
+    screen.blit("bg",(0,0))
     if game_over:
-        screen.fill("black")
-        screen.draw.text("Time is up! Your final score: "+str(score),midtop=(WIDTH/2,10),fontsize=40,color="violet")
+        display_message("Game over","Try again..")
+    elif game_complete:
+        display_message("You won","Well done..")
+    else:
+        for item in items:
+            item.draw()
 
-def place_cheese():
-    cheese.x=randint(50,(WIDTH-50))
-    cheese.y=randint(50,(HEIGHT-50))
+def update():
+    global items
+    if len(items)==0:
+        items=make_items(current_level)
 
-def time_up():
+def make_items(number_of_extra_items):
+    items_to_create=get_option_to_create(number_of_extra_items)
+    new_items=create_items(items_to_create)
+    layout_items(new_items)
+    animate_items(new_items)
+    return new_items
+
+def get_option_to_create(number_of_extra_items):
+    items_to_create=["plastic"]
+    for i in range(0,number_of_extra_items):
+        random_option=random.choice(ITEMS)
+        items_to_create.append(random_option)
+    return items_to_create
+
+def create_items(items_to_create):
+    new_items=[]
+    for option in items_to_create:
+        item=Actor(option)
+        new_items.append(item)
+    return new_items
+
+def layout_items(items_to_layout):
+    number_of_gaps=len(items_to_layout)+1
+    gap_size=WIDTH / number_of_gaps
+    random.shuffle(items_to_layout)
+    for index, item in enumerate(items_to_layout):
+        new_x_pos=(index+1)*gap_size
+        item.x=new_x_pos
+
+def animate_items(items_to_animate):
+    global animations
+    for item in items_to_animate:
+        duration=START_SPEED - current_level
+        item.anchor=("center","bottom")
+        animation=animate(item,duration=duration,on_finished=handle_game_over,y=HEIGHT)
+        animations.append(animation)
+
+def handle_game_over():
     global game_over
     game_over=True
 
-def update():
-    global score
+def on_mouse_down(pos):
+    global items, current_level
+for item in items:
+    if item.collidepoint(pos):
+        if "bag" in item.image:
+            handle_game_complete()
+        else:
+            handle_game_over()
 
-    if keyboard.left:
-        mouse.x=mouse.x-2
-    if keyboard.right:
-        mouse.x=mouse.x+2
-    if keyboard.up:
-        mouse.y=mouse.y-2
-    if keyboard.down:
-        mouse.y=mouse.y+2
+def handle_game_complete():
+    global current_level, items, animations, game_complete
+    stop_animations(animations)
+    if current_level== FINAL_LEVEL:
+        game_complete=True
+    else:
+        current_level=current_level+1
+        items=[]
+        animations=[]
 
-    cheese_collected=mouse.colliderect(cheese)
+def stop_animations(animations_to_stop):
+    for animation in animations_to_stop:
+        if animation.running:
+            animation.stop()
 
-    if cheese_collected:
-        score=score+10
-        place_cheese()
+def display_message(heading_text,subheading_text):
+    screen.draw.text(heading_text,fontsize=60,center=CENTRE,color="white")
+    screen.draw.text(subheading_text,fontsize=30,center=(400,330),color="white")
 
-clock.schedule(time_up,60.0)
-
-pgzrun.go()
+pgzrun.go()    
