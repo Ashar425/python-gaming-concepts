@@ -1,109 +1,60 @@
 import pgzrun
-import random
+from random import randint
+from time import time
 
-HEIGHT = 500
-WIDTH = 800
+WIDTH=800
+HEIGHT=600
 
-trophy=Actor("trophy")
-trophy.pos=(750,450)
+satellites=[]
+lines=[]
 
-player_radius = 10
-player_speed = 5
+next_satellite=0
+start_time=0
+total_time=0
+end_time=0
 
-rectangles = []
-game_over = False
-player_x = 0
-player_y = 0
+number_of_satellites=10
 
-
-def reset_game():
-    global rectangles, game_over, player_x, player_y
-
-    rectangles = []
-    game_over = False
-
-    player_x = WIDTH // 2
-    player_y = HEIGHT // 2
-
-    for i in range(25):
-        rectangles.append(mrect())
-
-
-def mrect():
-    w = random.randint(10, 200)
-    h = random.randint(10, 100)
-    x = random.randint(0, WIDTH - w)
-    y = random.randint(0, HEIGHT - h)
-    r = random.randint(0, 255)
-    g = random.randint(0, 255)
-    b = random.randint(0, 255)
-    color = (r, g, b)
-    return Rect(x, y, w, h), color
-
-
-reset_game()  
-
+def create_satellites():
+    global start_time
+    for count in range (0,number_of_satellites):
+        satellite=Actor("satellite")
+        satellite.pos=randint(40,WIDTH-40),randint(40,HEIGHT-40)
+        satellites.append(satellite)
+    start_time=time()
 
 def draw():
-    global player
-    screen.fill("black")
+    global total_time
+    screen.blit("starsky",(0,0))
+    number=1
+    for satellite in satellites:
+        screen.draw.text(str(number),(satellite.pos[0],satellite.pos[1]+20))
+        satellite.draw()
+        number=number+1
 
-    trophy.draw()
+        if next_satellite < number_of_satellites:
+            total_time=time()-start_time
+            screen.draw.text(str(round(total_time,1)),(10,10),fontsize=30)
+        else:
+            screen.draw.text(str(round(total_time,1)),(10,10),fontsize=30)
 
-    if game_over:
-        screen.draw.text("GAME OVER", center=(WIDTH//2, HEIGHT//2), fontsize=80, color="red")
-        screen.draw.text("Press SPACE to Restart", center=(WIDTH//2, HEIGHT//2 + 60),
-                         fontsize=40, color="white")
-        return
-
-    for rect, color in rectangles:
-        screen.draw.filled_rect(rect, color)
-
-    player=screen.draw.filled_circle((player_x, player_y), player_radius, "white")
-
+        for l in lines:
+            screen.draw.line(l[0],l[1],(255,255,255))
 
 def update():
-    global player_x, player_y, game_over
+    pass
 
-    if game_over:
-        if keyboard.space:
-            reset_game()
-        return
+def on_mouse_down(pos):
+    global next_satellite,lines
+    if next_satellite < number_of_satellites:
+        if satellites[next_satellite].collidepoint(pos):
+            if next_satellite:
+                lines.append((satellites[next_satellite-1].pos,satellites[next_satellite].pos))
+            next_satellite=next_satellite+1
+        else:
+            lines=[]
+            next_satellite=0
 
-    if keyboard.left:
-        player_x -= player_speed
-    if keyboard.right:
-        player_x += player_speed
-    if keyboard.up:
-        player_y -= player_speed
-    if keyboard.down:
-        player_y += player_speed
-
-    if player_x < player_radius:
-        player_x = player_radius
-    if player_x > WIDTH - player_radius:
-        player_x = WIDTH - player_radius
-    if player_y < player_radius:
-        player_y = player_radius
-    if player_y > HEIGHT - player_radius:
-        player_y = HEIGHT - player_radius
-
-    for rect, color in rectangles:
-        if circle_rect_collision(player_x, player_y, player_radius, rect):
-            game_over = True
-
-
-def circle_rect_collision(cx, cy, radius, rect):
-    closest_x = max(rect.left, min(cx, rect.right))
-    closest_y = max(rect.top, min(cy, rect.bottom))
-    distance_x = cx - closest_x
-    distance_y = cy - closest_y
-    return (distance_x**2 + distance_y**2) <= radius**2
-
-
-player_collected=trophy.colliderect(player)
-if player_collected():
-    message=("Congratulations you completed the game")
-
+create_satellites()
 
 pgzrun.go()
