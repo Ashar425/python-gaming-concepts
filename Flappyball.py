@@ -1,50 +1,65 @@
 import pgzrun
 import random
 
-TITLE="Flappy Ball"
-WIDTH=800
-HEIGHT=600
+TITLE = "Flappy Balls (OOP)"
+WIDTH = 800
+HEIGHT = 600
+GRAVITY = 2000.0
 
-r=random.randint(0,255)
-g=random.randint(0,255)
-b=random.randint(0,255)
-CLR=(r,g,b)
-GRAVITY=2000.0
+balls=(0,70)
 
 class Ball:
-    def __init__(self, initial_x, initial_y):
-        self.x=initial_x
-        self.y=initial_y
-        self.vx=200
-        self.vy=0
-        self.radius=40
+    def __init__(self, x, y, color, vx):
+        BALL_RADIUS = random.randint(0,70)
+
+        self.x = x
+        self.y = y
+        self.vx = vx
+        self.vy = 0
+        self.radius = BALL_RADIUS
+        self.color = color
 
     def draw(self):
-        pos=(self.x,self.y)
-        screen.draw.filled_circle(pos, self.radius, CLR)
+        screen.draw.filled_circle((self.x, self.y), self.radius, self.color)
 
-ball=Ball(50, 100)
+    def update(self, dt):
+        uy = self.vy
+        self.vy += GRAVITY * dt
+        self.y += (uy + self.vy) * 0.5 * dt
+
+        if self.y > HEIGHT - self.radius:
+            self.y = HEIGHT - self.radius
+            self.vy = -self.vy * 0.9
+
+        self.x += self.vx * dt
+
+        if self.x > WIDTH - self.radius or self.x < self.radius:
+            self.vx = -self.vx
+
+
+balls = [
+    Ball(100, 100, (255, 0, 0), 200),
+    Ball(200, 100, (0, 255, 0), 250),
+    Ball(300, 100, (0, 0, 255), 150),
+    Ball(400, 100, (255, 255, 0), 300)
+]
+
+
 def draw():
     screen.clear()
-    ball.draw()
+    for ball in balls:
+        ball.draw()
+
+
 def update(dt):
-    
-    uy=ball.vy
-    ball.vy += GRAVITY * dt
-    ball.y += (uy + ball.vy) * 0.5 * dt
-    
+    for ball in balls:
+        ball.update(dt)
 
-    if ball.y > HEIGHT - ball.radius:
-        ball.y=HEIGHT-ball.radius
-        ball.vy=-ball.vy * 0.9
-    ball.x += ball.vx * dt
-
-    if ball.x > WIDTH - ball.radius or ball.x < ball.radius:
-        ball.vx=-ball.vx
 
 def on_key_down(key):
-    """Pressing a key will kick the ball upwards"""
-    if key==keys.SPACE:
-        ball.vy=-500
+    if key == keys.SPACE:
+        for ball in balls:
+            ball.vy = -500
+
 
 pgzrun.go()
