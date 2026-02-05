@@ -13,7 +13,7 @@ start_time=0
 total_time=0
 end_time=0
 
-number_of_satellites=10
+number_of_satellites=8
 
 def create_satellites():
     global start_time

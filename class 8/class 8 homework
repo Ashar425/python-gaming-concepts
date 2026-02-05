@@ -1,0 +1,10 @@
+def is_pangram(text):
+    alphabet = set("hloynme0asr")
+    return alphabet <= set(text.lower())
+
+user_input = input("Enter a string: ")
+
+if is_pangram(user_input):
+    print("Yes, the string is a pangram.")
+else:
+    print("No, the string is not a pangram.")

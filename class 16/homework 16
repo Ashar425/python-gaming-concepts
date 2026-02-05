@@ -1,0 +1,61 @@
+import pygame
+import math
+
+pygame.init()
+
+screen = pygame.display.set_mode((500, 500))
+screen.fill("white")
+
+def triangle_points(pos, size):
+    cx, cy = pos
+    angles = [-90, 30, 150]
+    pts = []
+    for a in angles:
+        r = math.radians(a)
+        x = cx + size * math.cos(r)
+        y = cy + size * math.sin(r)
+        pts.append((x, y))
+    return pts
+
+class myTriangle():
+    def __init__(self, color, pos, size, wid=0):
+        self.color = color
+        self.pos = pos
+        self.size = size
+        self.wid = wid
+        self.screen = screen
+
+    def draw(self):
+        pygame.draw.polygon(self.screen, self.color, triangle_points(self.pos, self.size), self.wid)
+
+    def grow(self, x):
+        self.size = self.size + x
+        pygame.draw.polygon(self.screen, self.color, triangle_points(self.pos, self.size), self.wid)
+
+position = (300, 300)
+size = 50
+wid = 2
+
+pygame.draw.polygon(screen, "red", triangle_points(position, size), wid)
+pygame.display.update()
+
+blueTriangle = myTriangle("darkblue", position, size + 60)
+redTriangle = myTriangle("darkred", position, size + 40)
+yellowTriangle = myTriangle("yellow", position, size, 5)
+greenTriangle = myTriangle("darkgreen", position, size, 20)
+
+while 1:
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            blueTriangle.draw()
+            redTriangle.draw()
+            yellowTriangle.draw()
+            greenTriangle.draw()
+            pygame.display.update()
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            blueTriangle.grow(2)
+            redTriangle.grow(2)
+            yellowTriangle.grow(2)
+            greenTriangle.grow(2)
+            pygame.display.update()

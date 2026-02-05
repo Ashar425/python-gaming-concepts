@@ -1,0 +1,20 @@
+What is the capital of France?,Paris,London,Berlin,Madrid,1
+Which planet is known as the Red Planet?,Venus,Mars,Jupiter,Saturn,2
+How many continents are there on Earth?,5,6,7,8,3
+What is H2O commonly known as?,Hydrogen,Water,Oxygen,Helium,2
+Who painted the Mona Lisa?,Van Gogh,Michelangelo,Leonardo da Vinci,Picasso,3
+Which animal is known as the King of the Jungle?,Tiger,Lion,Elephant,Leopard,2
+What color do you get when you mix red and blue?,Purple,Green,Yellow,Orange,1
+How many days are there in a leap year?,365,366,364,367,2
+Which gas do humans exhale?,Oxygen,Carbon Dioxide,Nitrogen,Helium,2
+What is the largest planet in our solar system?,Earth,Saturn,Jupiter,Mars,3
+Which language is most widely spoken in the world?,English,Spanish,Mandarin,French,3
+Which ocean is the largest?,Atlantic,Pacific,Indian,Arctic,2
+Who wrote “Romeo and Juliet”?,Charles Dickens,Mark Twain,William Shakespeare,Jane Austen,3
+What do bees produce?,Silk,Honey,Wax,Milk,2
+Which part of the plant conducts photosynthesis?,Root,Stem,Leaf,Flower,3
+Which instrument has black and white keys?,Guitar,Flute,Violin,Piano,4
+How many legs does a spider have?,6,8,10,12,2
+Which country is famous for sushi?,China,Korea,Japan,Thailand,3
+Which shape has three sides?,Square,Triangle,Circle,Rectangle,2
+What do you call frozen water?,Snow,Ice,Frost,Hail,2

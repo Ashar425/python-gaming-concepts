@@ -1,0 +1,34 @@
+import pgzrun
+from random import randint
+
+TITLE = "Good Shot"
+WIDTH = 500
+HEIGHT = 500
+
+message = ""
+score = 0
+
+balloon = Actor("balloon")
+
+def draw():
+    screen.clear()
+    screen.fill("black")
+    balloon.draw()
+    screen.draw.text(message, center=(250, 30), fontsize=32)
+    screen.draw.text(f"Score: {score}", topright=(WIDTH - 10, 10), fontsize=32)
+
+def place_balloon():
+    balloon.x = randint(50, WIDTH - 50)
+    balloon.y = randint(50, HEIGHT - 50)
+
+def on_mouse_down(pos):
+    global message, score
+    if balloon.collidepoint(pos):
+        score += 1
+        message = "Good shot!"
+        place_balloon()
+    else:
+        message = "You missed"
+
+place_balloon()
+pgzrun.go()
